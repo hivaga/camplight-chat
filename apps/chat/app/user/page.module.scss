@@ -5,3 +5,17 @@
  * .container {
  * }
 */
+
+.registerUserForm {
+  display: inline-flex;
+  flex-direction: row;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 20px 20px;
+  border-radius: 6px;
+}
+
+.labelContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}

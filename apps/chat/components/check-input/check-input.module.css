@@ -1,0 +1,23 @@
+/*
+ * Replace this with your own classes
+ *
+ * e.g.
+ * .container {
+ * }
+*/
+
+.container {
+  display:flex;
+  position: relative;
+  gap: 10px;
+  width: 100%;
+}
+
+.inputField {
+  width: 100%;
+  flex-grow: 1;
+}
+
+.icon {
+  /*position: absolute;*/
+}

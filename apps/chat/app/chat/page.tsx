@@ -1,15 +1,30 @@
+import styles from './page.module.scss';
+import {submitMessage} from "../../actions/submit-message";
+import CheckInput from "../../components/check-input/check-input";
 
+function SubmitMessage() {
+  return (
+    <div className={styles.container}>
+      <form action={submitMessage} className={styles.submitForm}>
+          <div className={styles.hcontainer}>
+            <CheckInput placeholder={'Enter your message'} formName={'message'}/>
+            <button type={'submit'}>Send</button>
+          </div>
+      </form>
+    </div>
+);
+}
 
-/* eslint-disable-next-line */
 export interface ChatProps {
 }
 
-export async function Chat(props: ChatProps) {
+async function Chat(props: ChatProps) {
+
   return (
     <div>
-      <h1>Chat Page</h1>
-      {/* ... use repo data here ... */}
+      <SubmitMessage/>
     </div>
   );
 }
+
 export default Chat;
