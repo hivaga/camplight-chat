@@ -6,7 +6,7 @@ export default async function Index() {
    *
    * Note: The corresponding styles are in the ./index.scss file.
    */
-  return (<div>
+  return (<>
     <h1>Home Page</h1>
-  </div>);
+  </>);
 }

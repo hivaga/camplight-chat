@@ -16,11 +16,13 @@ Please follow the best practices and emphasize code quality, efficiency, and use
 - Provide the solution via a GitHub repository (private or public).
 - Provide as many features as possible
 
-This are my requierments, now if I use TypeORM is this covering this  " tRPC for efficient" requierment
 ```
 
+## Installation
+
+Run `pnpm install` to install all dependencies.
 
 
-## Start the app
+## Start Chat Application (Development)
 
 To start the development server run `nx serve chat`. Open your browser and navigate to http://localhost:4200/.

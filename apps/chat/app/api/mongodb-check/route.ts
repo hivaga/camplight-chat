@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   try {
     const client = await getMongoDBClient();
     // Perform database operations here
-    console.log(message);
+    console.log("API::",message);
     return new Response(message);
   } catch (e) {
     return new Response(error, {status: 500});

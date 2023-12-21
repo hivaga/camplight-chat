@@ -5,6 +5,7 @@ export interface IChatMessage {
   sender: string;
   time: number;
   message: string;
+  _id?: string;
 }
 
 // Define a Schema

@@ -6,12 +6,15 @@
   "private": true,
   "dependencies": {
     "@nx/next": "17.2.1",
+    "axios": "^1.6.2",
     "mongodb": "^5.2.0",
     "mongoose": "^8.0.3",
     "next": "13.4.4",
+    "node-cache": "^5.1.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "reflect-metadata": "^0.2.1",
+    "socket.io-client": "^4.7.2",
     "tslib": "^2.3.0",
     "typeorm": "^0.3.17"
   },
