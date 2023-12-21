@@ -14,10 +14,15 @@ async function establishDataBaseConnection() {
   }
 }
 
+let lastPingTime = 0;
 export async function checkDataBaseConnection() {
   try {
-    await mongooseClient.connection.db.command({ping: 1});
-    console.log("Mongoose Database connection alive!")
+    const currentTime = new Date().getTime();
+    if(currentTime - lastPingTime > 30000) {
+      lastPingTime = currentTime;
+      await mongooseClient.connection.db.command({ping: 1});
+      console.log("Mongoose Database connection alive!")
+    }
     return true;
   } catch (error) {
     console.error("Mongoose Database ping failed!", error);

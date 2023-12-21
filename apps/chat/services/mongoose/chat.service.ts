@@ -33,7 +33,7 @@ export async function getChatMessages(filter?: { type: 'date', date: number } | 
         delete ret.__v;
       }
     }));
-    console.log("Retrieved messages:", messages);
+    console.log("getChatMessages:: Retrieved messages:", messages);
   }
 
   return messages;
