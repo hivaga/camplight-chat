@@ -13,5 +13,6 @@ export default async function updateCurrentChatSender(formData: FormData) {
 
   revalidateTag(TAG_STORE);
   revalidatePath('/user');
+  revalidatePath('/chat');
 
 }

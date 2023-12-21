@@ -34,11 +34,23 @@ function updateMessagesMap(newMessages: IChatMessage[], messagesMap: Map<string,
   });
 }
 
+function isScrollerAtBottom(containerRef: HTMLDivElement) {
+  console.log('messages', containerRef.scrollTop, containerRef.scrollHeight, containerRef.offsetHeight);
+  const maxScroll = containerRef.scrollHeight - containerRef.offsetHeight;
+  console.log('maxScroll', maxScroll, (maxScroll - containerRef.scrollTop));
+  if ((maxScroll - containerRef.scrollTop) < 5) {
+    return true;
+  }
+  return false;
+}
+
 export interface MessagesListProps {
   // Assuming your API provides a function to fetch messages
 }
+
 export function MessagesList(props: MessagesListProps) {
   const [messages, setMessages] = useState<IChatMessage[]>([]);
+  const [isScrollBottom, setIsScrollBottom] = useState(false);
   const messagesMap = useRef(new Map<string, IChatMessage>()).current;
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -49,7 +61,12 @@ export function MessagesList(props: MessagesListProps) {
       const newMessages = await fetchNewMessages(filter);
       updateMessagesMap(newMessages, messagesMap);
       const allMessages = convertMapToArray(messagesMap);
-      setMessages(allMessages);
+      if (newMessages.length > 0) {
+        if (containerRef.current) {
+          setIsScrollBottom(isScrollerAtBottom(containerRef.current))
+        }
+        setMessages(allMessages);
+      }
     } catch (error) {
       console.error('Failed to fetch messages:', error);
     }
@@ -62,10 +79,12 @@ export function MessagesList(props: MessagesListProps) {
   }, [fetchMessages]);
 
   useEffect(() => {
-    if (containerRef.current) {
-        containerRef.current.scrollTop =  containerRef.current.scrollHeight;
+    if (containerRef.current && isScrollBottom) {
+      const maxScroll = containerRef.current.scrollHeight - containerRef.current.offsetHeight;
+      containerRef.current.scrollTop = maxScroll
     }
-  }, [messages]);
+  }, [isScrollBottom])
+
 
   return (
     <div className={styles.container} ref={containerRef}>
