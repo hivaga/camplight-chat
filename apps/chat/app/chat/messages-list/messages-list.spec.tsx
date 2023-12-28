@@ -4,7 +4,7 @@ import MessagesList from './messages-list';
 
 describe('MessagesList', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<MessagesList />);
+    const { baseElement } = render(<MessagesList messages={[]}/>);
     expect(baseElement).toBeTruthy();
   });
 });

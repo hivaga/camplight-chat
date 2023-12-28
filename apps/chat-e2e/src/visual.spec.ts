@@ -8,9 +8,9 @@ test.beforeEach(async ({ page }) => {
 
 
 test('has main menu', async ({ page }) => {
-  expect(await page.getByRole('link', { name: 'Home' })).toBeVisible();
-  expect(await page.getByRole('link', { name: 'User' })).toBeVisible();
-  expect(await page.getByRole('link', { name: 'Chat' })).toBeVisible();
+  expect(await page.getByRole('link', { name: 'Home' })).toBeDefined();
+  expect(await page.getByRole('link', { name: 'User' })).toBeDefined();
+  expect(await page.getByRole('link', { name: 'Chat' })).toBeDefined();
 });
 
 

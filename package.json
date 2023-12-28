@@ -7,6 +7,7 @@
   "dependencies": {
     "@nx/next": "17.2.1",
     "axios": "^1.6.2",
+    "lowdb": "^7.0.1",
     "mongodb": "^5.2.0",
     "mongoose": "^8.0.3",
     "next": "13.4.4",

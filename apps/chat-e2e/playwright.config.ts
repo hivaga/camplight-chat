@@ -30,4 +30,16 @@ export default defineConfig({
     reuseExistingServer: true,
     cwd: workspaceRoot
   },
+  projects: [
+    {
+      name: 'Chrome',
+      use: {
+        browserName: 'chromium',
+        launchOptions: {
+          args: ['--ignore-certificate-errors']
+        }
+      }
+    }
+  ],
+  reporter: 'list'
 });

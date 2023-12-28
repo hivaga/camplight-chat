@@ -4,7 +4,7 @@ import Icon from './icon';
 
 describe('Icon', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Icon />);
+    const { baseElement } = render(<Icon type={'success'} />);
     expect(baseElement).toBeTruthy();
   });
 });

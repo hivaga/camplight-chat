@@ -1,0 +1,20 @@
+.container {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.leftAligned {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  // Other styles specific to left alignment
+}
+
+.rightAligned {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  // Other styles specific to right alignment
+}

@@ -1,95 +1,85 @@
-'use client';
-import {useEffect, useState, useCallback, useRef} from 'react';
+'use client'
+
 import styles from './messages-list.module.scss';
-import axios from "axios";
 import {IChatMessage} from "../../../model/mongoose/chat-message";
-import MessageBuble from "../message-buble/message-buble";
+import MessageBubble from "../message-bubble/message-bubble";
+import {getStore} from "../../../components/client-store/client-store";
+import {useEffect, useRef, useState} from "react";
 
-const MESSAGE_FETCH_INTERVAL = 2000;
-
-function convertMapToArray(map: Map<string, IChatMessage>) {
-  const allMessages = Array.from(map.values());
-  return allMessages.sort((a, b) => {
-    return (a.time - b.time);
-  });
-}
-
-function getLastMessageFilter(currentMessages: IChatMessage[]): { type: 'date', date: number } | { type: 'all' } {
-  const lastMessage = currentMessages[currentMessages.length - 1];
-  return lastMessage
-    ? {type: 'date', date: lastMessage.time}
-    : {type: 'all'};
-}
-
-async function fetchNewMessages(filter: { type: 'date', date: number } | { type: 'all' }) {
-  const response = await axios.post('http://localhost:4200/api/messages', filter);
-  return response.data;
-}
-
-function updateMessagesMap(newMessages: IChatMessage[], messagesMap: Map<string, IChatMessage>) {
-  newMessages.forEach(message => {
-    if (message._id && !messagesMap.has(message._id)) {
-      messagesMap.set(message._id, message);
-    }
-  });
-}
-
-function isScrollerAtBottom(containerRef: HTMLDivElement) {
-  console.log('messages', containerRef.scrollTop, containerRef.scrollHeight, containerRef.offsetHeight);
-  const maxScroll = containerRef.scrollHeight - containerRef.offsetHeight;
-  console.log('maxScroll', maxScroll, (maxScroll - containerRef.scrollTop));
-  if ((maxScroll - containerRef.scrollTop) < 5) {
-    return true;
-  }
-  return false;
-}
 
 export interface MessagesListProps {
   // Assuming your API provides a function to fetch messages
+  initialMessages: IChatMessage[];
 }
 
-export function MessagesList(props: MessagesListProps) {
-  const [messages, setMessages] = useState<IChatMessage[]>([]);
-  const [isScrollBottom, setIsScrollBottom] = useState(false);
-  const messagesMap = useRef(new Map<string, IChatMessage>()).current;
-  const containerRef = useRef<HTMLDivElement>(null);
+function getAlignment(sender: string, currentChatUser: string) {
+  if (sender === currentChatUser) {
+    return 'right';
+  }
+  return 'left';
+}
 
-  const fetchMessages = useCallback(async () => {
-    try {
-      const currentMessages = convertMapToArray(messagesMap);
-      const filter = getLastMessageFilter(currentMessages);
-      const newMessages = await fetchNewMessages(filter);
-      updateMessagesMap(newMessages, messagesMap);
-      const allMessages = convertMapToArray(messagesMap);
-      if (newMessages.length > 0) {
-        if (containerRef.current) {
-          setIsScrollBottom(isScrollerAtBottom(containerRef.current))
+function scrollToBottom(div: HTMLDivElement | null, sender: string, currentUser: string) {
+  console.log('scroll', div?.scrollHeight, div?.scrollTop);
+  if (div && sender === currentUser) {
+    div.scrollTo(0, div.scrollHeight);
+  }
+}
+
+
+export function MessagesList({initialMessages = []}: MessagesListProps) {
+
+  const [messages, setMessages] = useState(initialMessages);
+  const {currentUser = ''} = getStore();
+
+  const listRef = useRef<HTMLDivElement>(null);
+
+  // setTimeout(() => {
+  //   if (lastMessage && listRef.current) {
+  //     scrollToBottom(listRef.current, lastMessage.sender, currentUser);
+  //   }
+  // }, 1);
+
+  useEffect(() => {
+    const afterInitialMessages:IChatMessage[]= [];
+    const lastMessage = messages[messages.length - 1];
+    let url = 'http://localhost:4200/api/messages/stream';
+    if(lastMessage) {
+      url = `${url}?lastMessageTime=${lastMessage.time}`;
+    }
+    const eventSource = new EventSource(url);
+
+    eventSource.addEventListener('message', (event: MessageEvent<string>) => {
+      if(event.data) {
+        try {
+          const receivedMessages:IChatMessage[] = JSON.parse(event.data);
+          afterInitialMessages.push(...receivedMessages);
+          console.log('New messages received:', receivedMessages);
+          setMessages([...initialMessages, ...afterInitialMessages]);
+        }catch (e) {
+
         }
-        setMessages(allMessages);
       }
-    } catch (error) {
-      console.error('Failed to fetch messages:', error);
-    }
-  }, [messagesMap, setMessages]);
+    })
 
-  useEffect(() => {
-    fetchMessages();
-    const interval = setInterval(fetchMessages, MESSAGE_FETCH_INTERVAL);
-    return () => clearInterval(interval);
-  }, [fetchMessages]);
+    eventSource.addEventListener('error', () => {
+      console.log('Error from message');
+    })
 
-  useEffect(() => {
-    if (containerRef.current && isScrollBottom) {
-      const maxScroll = containerRef.current.scrollHeight - containerRef.current.offsetHeight;
-      containerRef.current.scrollTop = maxScroll
-    }
-  }, [isScrollBottom])
+    return () => {
+      eventSource.close();
+    };
+  }, []);
+
 
 
   return (
-    <div className={styles.container} ref={containerRef}>
+    <div className={styles.container} ref={listRef}>
       {messages.map((message, index) => (
-        <MessageBuble sender={message.sender} message={message.message} key={message._id}/>
+        <MessageBubble sender={message.sender}
+                       message={message.message}
+                       key={message._id}
+                       allign={getAlignment(message.sender, currentUser)}/>
       ))}
     </div>
   );

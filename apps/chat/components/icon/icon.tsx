@@ -1,12 +1,11 @@
 import styles from './icon.module.scss';
 
-/* eslint-disable-next-line */
 export interface IconProps {
   type: 'success' | 'error' | 'info';
 }
 
 export function Icon(props: IconProps) {
-  const { type } = props;
+  const {type} = props;
 
   let iconElement;
 

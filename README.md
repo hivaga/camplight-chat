@@ -20,9 +20,17 @@ Please follow the best practices and emphasize code quality, efficiency, and use
 
 ## Installation
 
-Run `pnpm install` to install all dependencies.
+Run `npm install` to install all dependencies.
 
 
 ## Start Chat Application (Development)
 
 To start the development server run `nx serve chat`. Open your browser and navigate to http://localhost:4200/.
+
+## Start Unit Tests
+
+Run `nx test chat`
+
+## Start E2E Tests
+
+Run `nx e2e chat-e2e`
