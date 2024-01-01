@@ -4,7 +4,7 @@ import {IChatMessage} from "../../../../model/mongoose/chat-message";
 
 export const dynamic = 'force-dynamic';
 const encoder = new TextEncoder();
-export const CHECK_MESSAGES_TIMEOUT_INTERVAL = 500;
+export const CHECK_MESSAGES_TIMEOUT_INTERVAL = 10000;
 
 function toDataString(data: any): string {
   return `data: ${JSON.stringify(data)}\n\n`
@@ -16,11 +16,10 @@ function convertDataToSSEFormat(data: IChatMessage[]) {
 }
 
 export async function GET(request: NextRequest) {
+
   const responseStream = new TransformStream();
   const writer = responseStream.writable.getWriter();
   let optionalLastMessageID = request.nextUrl.searchParams.get('lastMessageTime');
-
-  console.log('API.messages/stream:: last lastMessageTime:', optionalLastMessageID);
 
   let filter: ChatMessageFilter = {type: 'date', date: 0};
   if (optionalLastMessageID) {
@@ -44,7 +43,7 @@ export async function GET(request: NextRequest) {
     }
   };
 
-  // Write an immediate response
+  // Write an immediate response after the subscription is created
   setTimeout(sendMessage, 0);
 
   // Regularly check for new messages

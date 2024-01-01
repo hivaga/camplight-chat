@@ -1,11 +1,4 @@
-import {resetServerStore} from "../store/server-store";
-import {revalidateTag} from "next/cache";
-
 export default async function Index() {
-
-  await resetServerStore();
-  revalidateTag('messages');
-
 
   /*
    * Replace the elements below with your own.

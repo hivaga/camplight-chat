@@ -3,7 +3,7 @@
 import styles from './messages-list.module.scss';
 import {IChatMessage} from "../../../model/mongoose/chat-message";
 import MessageBubble from "../message-bubble/message-bubble";
-import {getStore} from "../../../components/client-store/client-store";
+import {getClientStore} from "../../../store/client-store";
 import {useEffect, useRef, useState} from "react";
 
 
@@ -30,7 +30,7 @@ function scrollToBottom(div: HTMLDivElement | null, sender: string, currentUser:
 export function MessagesList({initialMessages = []}: MessagesListProps) {
 
   const [messages, setMessages] = useState(initialMessages);
-  const {currentUser = ''} = getStore();
+  const {currentUser = ''} = getClientStore();
 
   const listRef = useRef<HTMLDivElement>(null);
 

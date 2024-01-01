@@ -9,6 +9,7 @@ export async function GET(request: Request) {
     console.log("API::",message);
     return new Response(message);
   } catch (e) {
+    console.error("API:: Error while trying to check DB connection!",error, e);
     return new Response(error, {status: 500});
   }
 }

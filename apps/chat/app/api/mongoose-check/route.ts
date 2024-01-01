@@ -2,17 +2,19 @@ import {checkDataBaseConnection} from "../../../services/mongoose/mongoose.servi
 
 const message = 'Database connection alive!'
 const error = 'Error while trying to connect to Database';
+
 export async function GET(request: Request) {
-  let responseContent:string = error;
+  let responseContent: string = error;
   try {
     const result = await checkDataBaseConnection();
 
-    if(result) {
+    if (result) {
       responseContent = message;
-    }else{
+    } else {
       responseContent = error;
     }
   } catch (e) {
+    console.error("API:: Error while trying to check DB connection!", error, e);
     return new Response(error, {status: 500});
   }
 

@@ -1,33 +1,30 @@
-import styles from './page.module.scss';
-import CheckInput from "../../components/check-input/check-input";
-import {revalidatePath} from "next/cache";
-import ClientStore from "../../components/client-store/client-store";
+import RegisterUser from "./register-user/register-user";
 
 export interface LoginProps {
 }
 
 let currentUser:string | undefined;
 
-async function updateCurrentChatSender(form: FormData) {
+// TODO: Kept for experimental purposes
+/*async function updateCurrentChatSender(form: FormData) {
   'use server'
   currentUser = form.get('username') as string;
+  const response = await fetch('http://localhost:4200/api/session', {
+    method: 'POST',
+    body: JSON.stringify({user:currentUser}),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  const json = await response.json();
+  console.log('User Session creation response:', json);
   revalidatePath('/user');
-}
+}*/
 
 export async function User(props: LoginProps) {
-
-  return (
-    <>
-      <ClientStore currentUser={currentUser}/>
-      <form action={updateCurrentChatSender} className={styles.registerUserForm}>
-        <label className={styles.labelContainer}>
-          <span>Name:</span>
-          <CheckInput defaultValue={currentUser} placeholder={'Input your chat name'} formName={'username'}/>
-          <button type="submit">Apply</button>
-        </label>
-      </form>
-    </>
-  );
+   return (<>
+      <RegisterUser />
+    </>);
 }
 
 export default User;

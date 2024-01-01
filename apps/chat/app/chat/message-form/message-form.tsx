@@ -4,7 +4,7 @@ import styles from './message-form.module.scss';
 import sendNewChatMessage from "../../../actions/send-new-chat-message";
 import CheckInput from "../../../components/check-input/check-input";
 import {useState, useRef} from "react";
-import {getStore} from "../../../components/client-store/client-store";
+import {getClientStore} from "../../../store/client-store";
 
 export interface MessageFormProps {
 }
@@ -13,7 +13,7 @@ export function MessageForm(props: MessageFormProps) {
   const [loading, setLoading] = useState(false);
   const [inputKey, setInputKey] = useState(Date.now());
   const formRef = useRef<HTMLFormElement>(null);
-  const {currentUser = 'Sender'} = getStore();
+  const {currentUser = 'Sender'} = getClientStore();
 
 
   const submitMessageHandler = async (formData: FormData) => {
