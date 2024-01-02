@@ -10,6 +10,7 @@ export const metadata = {
 
 export default function RootLayout({children}: { children: React.ReactNode; }) {
 
+  // TODO find efficient way to reset server temporary store
   // resetServerStore();
 
   return (
