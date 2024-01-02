@@ -2,6 +2,7 @@
 
 export interface IAppStore {
   currentUser: string | undefined
+  expiresAt: number | undefined
 }
 
 let clientStore: IAppStore = {} as IAppStore

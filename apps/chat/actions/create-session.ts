@@ -1,10 +1,10 @@
 'use server'
 import {revalidatePath} from "next/cache";
-import {addNewSesson, readServerStore, SessionType} from "../store/server-store";
+import {addNewSession, readServerStore, SessionType} from "../store/server-store";
 
 export default async function createSession(username: string) {
 
-  const storeData = await readServerStore();
+  const storeData = readServerStore();
   const session = storeData.sessions[username];
   if (storeData.sessions[username] && session.expiresAt >= Date.now()) {
     return false;
@@ -18,7 +18,7 @@ export default async function createSession(username: string) {
     expiresAt
   };
 
-  await addNewSesson(sessionData);
+   addNewSession(sessionData);
 
   revalidatePath('/user');
 

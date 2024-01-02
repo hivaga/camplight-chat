@@ -1,5 +1,5 @@
-import {JSONFilePreset} from 'lowdb/node'
-import {Low} from "lowdb";
+import {JSONFileSyncPreset} from 'lowdb/node'
+import {LowSync} from "lowdb";
 import {IChatMessage} from "../model/mongoose/chat-message";
 
 export type AppStoreType = { messages: Record<string, IChatMessage>, sessions: Record<string, SessionType> };
@@ -9,63 +9,58 @@ export type SessionType = {
   expiresAt: number;
 }
 
-const DEFAULT_DATA: AppStoreType = {messages: {}, sessions: {} };
+let store: LowSync<AppStoreType>;
 
-let store: Low<AppStoreType>;
-
-async function getStore() {
+function getStore() {
   if (!store) {
-    store = await initStore();
+    store = initStore();
   }
   return store;
 }
 
-async function initStore() {
-  const db = await JSONFilePreset('db.json', DEFAULT_DATA);
+function initStore() {
+  // const adapter = new Memory<AppStoreType>();
+  // const db = new Low(adapter, {messages: {}, sessions: {}});
+  // await db.read(); // Initialize the store
+  // return db;
+  const db = JSONFileSyncPreset<AppStoreType>('db.json', {messages: {}, sessions: {}});
   return db;
 }
 
-export async function updateStoreMessages(newMessages: Record<string, IChatMessage>): Promise<void> {
-  const store = await getStore();
+export function updateStoreMessages(newMessages: Record<string, IChatMessage>) {
+  const store =  getStore();
   console.log('Server store update messages:', Object.keys(newMessages).length);
   // TODO the logic here can be improved in order to minimize the writing if there is no need
   store.data.messages = newMessages;
-  await store.write();
+  store.write();
 }
 
-export async function addNewSesson(session: SessionType): Promise<void> {
-  const store = await getStore();
+export function addNewSession(session: SessionType) {
+  const store =  getStore();
   store.data.sessions[session.username] = session;
-  await store.write();
+  store.write();
 }
-export  async  function getSession(username: string): Promise<SessionType | undefined> {
-  const store = await getStore();
+export  function getSession(username: string){
+  const store = getStore();
   return store.data.sessions[username];
 }
 
-export async function removeSession(username: string): Promise<void> {
-  const store = await getStore();
+export  function removeSession(username: string){
+  const store =  getStore();
   delete store.data.sessions[username];
-  await store.write();
+  store.write();
 }
 
 
-export async function readServerStore(): Promise<AppStoreType> {
-  const store = await getStore();
-  await store.read();
-  return store.data ?? {messages: {}};
+export function readServerStore(){
+  const store =  getStore();
+   store.read();
+  return store.data ?? {messages: {}, sessions: {}};
 }
 
-export async function resetStore() {
+export function resetStore() {
   console.log('Server store reset !');
-  const store = await getStore();
-  store.data = DEFAULT_DATA;
-  await store.write();
-}
-
-
-export async function updateAllSessions(sessions: Record<string, SessionType>) {
-  const store = await getStore();
-  store.data.sessions = {...sessions};
-  await store.write();
+  const store =  getStore();
+  store.data = {messages: {}, sessions: {}};
+   store.write();
 }

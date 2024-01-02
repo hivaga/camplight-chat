@@ -1,4 +1,5 @@
 import {SessionType} from "../store/server-store";
+import {NextResponse} from "next/server";
 
 export async function getCurrentSession(): Promise<SessionType | undefined> {
   try {
@@ -21,4 +22,23 @@ export async function getCurrentSession(): Promise<SessionType | undefined> {
 
 
 
+}
+
+export function generateSessionResponse(session: SessionType) {
+  const response = NextResponse.json(session);
+  response.cookies.set('username', session.username, {
+    httpOnly: true,
+    path: '/',
+    sameSite: 'strict',
+    maxAge: 60 // 60 seconds
+  });
+  return response;
+}
+
+export function generateSession(username: string, createdAt: number): SessionType {
+  return {
+    username,
+    createdAt,
+    expiresAt: (createdAt + 60 * 1000)
+  }
 }

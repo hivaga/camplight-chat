@@ -1,36 +1,15 @@
 import {NextRequest, NextResponse} from "next/server";
-import {addNewSesson, getSession, removeSession, SessionType} from "../../../store/server-store";
-import {revalidatePath, revalidateTag} from "next/cache";
+import {addNewSession, getSession, removeSession} from "../../../store/server-store";
+import {revalidateTag} from "next/cache";
+import {generateSession, generateSessionResponse} from "../../../lib/sessions";
 
-function generateSessionResponse(session: SessionType) {
-  const response = NextResponse.json(session);
-  response.cookies.set('username', session.username, {
-    httpOnly: true,
-    path: '/',
-    sameSite: 'strict',
-    maxAge: 60 // 60 seconds
-  });
-  return response;
-}
-
-function generateSession(username: string, createdAt: number): SessionType {
-  return {
-    username,
-    createdAt,
-    expiresAt: (createdAt + 60 * 1000)
-  }
-}
 
 export async function GET(request: NextRequest) {
   try {
     const usernameCookie = request.cookies.get('username');
-    const username = usernameCookie ? usernameCookie?.value : undefined
-    console.log('API.session:: GET session:', username);
-    if (!username) {
-      return new Response('No session found!', {status: 404});
-    }
-
-    const session = await getSession(username);
+    const username = usernameCookie ? usernameCookie?.value : '';
+    console.log('API.session:: GET session:', !!username ? username : undefined);
+    const session = getSession(username);
     if (!session) {
       return new Response('No session found!', {status: 404});
     }
@@ -58,7 +37,7 @@ export async function POST(request: NextRequest) {
     const previousUsername = usernameCookie ? usernameCookie?.value : undefined
 
     const currentTimestamp = Date.now();
-    const prevSession = await getSession(newUsername);
+    const prevSession = getSession(newUsername);
 
 
     if (previousUsername !== newUsername && prevSession && prevSession.expiresAt > currentTimestamp) {
@@ -69,12 +48,12 @@ export async function POST(request: NextRequest) {
     // This can only happen if a user decided to change his name while current cookie is still valid
     if(previousUsername && previousUsername !== newUsername) {
       console.log(`API.session:: Clean session for user: '${previousUsername}'`);
-      await removeSession(previousUsername);
+      removeSession(previousUsername);
     }
 
     console.log(`API.session:: Created new session for user: '${newUsername}'`);
     const newSession = generateSession(newUsername, currentTimestamp);
-    await addNewSesson(newSession);
+    addNewSession(newSession);
     revalidateTag('session');
     const response = generateSessionResponse(newSession);
     return response

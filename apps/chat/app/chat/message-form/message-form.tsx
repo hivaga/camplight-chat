@@ -1,7 +1,7 @@
 'use client';
 
 import styles from './message-form.module.scss';
-import sendNewChatMessage from "../../../actions/send-new-chat-message";
+import sendNewChatMessage, {AddMessageResultType} from "../../../actions/send-new-chat-message";
 import CheckInput from "../../../components/check-input/check-input";
 import {useState, useRef, useEffect} from "react";
 import {getClientStore} from "../../../store/client-store";
@@ -18,10 +18,10 @@ export function MessageForm(props: MessageFormProps) {
   const {currentUser = ''} = getClientStore();
   const [username, setUsername] = useState<string>(currentUser);
 
-  if(!username) {
-    const fetchCurrentUser = async() => {
+  if (!username) {
+    const fetchCurrentUser = async () => {
       const session = await getCurrentSession();
-      if(session && session?.username) {
+      if (session && session?.username) {
         setUsername(session.username);
       }
     }
@@ -34,22 +34,32 @@ export function MessageForm(props: MessageFormProps) {
 
     const time = new Date().getTime();
     const message = formData.get('message') as string;
-    const submitResult = await sendNewChatMessage(
-      {
-        sender: currentUser,
-        time,
-        message
-      }
-    );
 
-    if(formRef.current) {
+    try {
+      const submitResult: AddMessageResultType = await sendNewChatMessage(
+        {
+          sender: currentUser,
+          time,
+          message
+        }
+      );
+
+      if (!submitResult.result && submitResult?.error) {
+        alert(submitResult.error);
+      }
+    } catch (e) {
+      console.error('Error sending message', e);
+      alert('Unexpeted error sending message!');
+    }
+
+    if (formRef.current) {
       setInputKey(Date.now());
       formRef.current.reset();
     }
     setLoading(false);
   }
 
-  if(!username) {
+  if (!username) {
     return <div className={styles.unknow_user}>Unknow users can only read messages</div>
   }
 

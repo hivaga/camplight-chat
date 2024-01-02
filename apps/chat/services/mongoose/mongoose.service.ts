@@ -14,10 +14,10 @@ async function establishDataBaseConnection() {
   }
 }
 
-let lastPingTime = 0;
+let lastPingTime = Date.now();
 export async function checkDataBaseConnection() {
   try {
-    const currentTime = new Date().getTime();
+    const currentTime = Date.now();
     if(currentTime - lastPingTime > 30000) {
       lastPingTime = currentTime;
       await mongooseClient.connection.db.command({ping: 1});

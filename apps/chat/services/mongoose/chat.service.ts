@@ -45,12 +45,12 @@ export const addChatMessage = async (message: IChatMessage) => {
   if (mongooseClient.connection.readyState === ConnectionStates.connected) {
     const newMessage = new ChatMessage(message);
     await newMessage.save();
-    const store = await readServerStore();
+    const store = readServerStore();
     const newMessagesMap = updateMessagesMap([newMessage], store.messages);
     const allMessages = convertMapToArray(newMessagesMap);
     console.log('ChatService.getChatMessages():: Local store messages length:', allMessages.length);
     // TODO improve logic a possible race condition when someone have updated the local store in the short period between us reading and writing it
-    await updateStoreMessages(newMessagesMap);
+    updateStoreMessages(newMessagesMap);
     return true;
   }
   return false;
@@ -59,19 +59,19 @@ export const addChatMessage = async (message: IChatMessage) => {
 // Example: Fetching chat messages
 export const getChatMessages = async (filter: ChatMessageFilter = {type: 'date', date: 0}) => {
   const mongooseClient = await getMongooseClient();
-  let storeData = await readServerStore();
-  console.log('ChatService.getChatMessages():: Store data:', storeData);
+  let storeData = readServerStore();
+  //console.log('ChatService.getChatMessages():: Store data:', storeData);
   const allStoreMessages = convertMapToArray(storeData.messages);
-  console.log("ChatService.getChatMessages():: filter", filter);
+  //console.log("ChatService.getChatMessages():: filter", filter);
 
   if (allStoreMessages && allStoreMessages.length) {
 
-    console.log('ChatService.getChatMessages():: Messages from local data:', allStoreMessages.length);
+    //console.log('ChatService.getChatMessages():: Messages from local data:', allStoreMessages.length);
     const afterDateMessages = allStoreMessages.filter(message => {
       return (message.time > filter.date);
     })
 
-    console.log('ChatService.getChatMessages():: Returned messages:', afterDateMessages.length);
+    //console.log('ChatService.getChatMessages():: Returned messages:', afterDateMessages.length);
     return afterDateMessages;
   }
 
@@ -93,10 +93,10 @@ export const getChatMessages = async (filter: ChatMessageFilter = {type: 'date',
 
     // this means we can safely update all the messages in our store because we have fetched the hole db
     if(filter.date === 0) {
-      await updateStoreMessages(messagesMap);
+       updateStoreMessages(messagesMap);
     }
 
-    storeData = await readServerStore();
+    storeData = readServerStore();
 
     const responseMessages = filterMessagesByDate(filter, {...storeData.messages, ...messagesMap});
     console.log('ChatService.getChatMessages():: Returned messages:', responseMessages.length);

@@ -11,14 +11,21 @@ export interface RegisterUserProps {
 
 export function RegisterUser(props: RegisterUserProps) {
 
-  const {currentUser = ''} = getClientStore();
+  const now = Date.now();
+  let {currentUser = '', expiresAt} = getClientStore();
+
+  if(expiresAt && now >= expiresAt) {
+    currentUser = '';
+    updateClientStore({currentUser: '', expiresAt: undefined});
+  }
+
   const [username, setUsername] = useState(currentUser);
 
   useEffect(() => {
     const fetchCurrentUser = async() => {
       const session = await getCurrentSession();
       if(session && session?.username) {
-        updateClientStore({currentUser: session.username})
+        updateClientStore({currentUser: session.username, expiresAt: session.expiresAt});
         setUsername(session.username);
       }
     }
@@ -59,17 +66,19 @@ export function RegisterUser(props: RegisterUserProps) {
         const json = await response.json();
         console.log('User session created:', json);
         setUsername(newUsername as string);
-        updateClientStore({currentUser: newUsername as string})
+        updateClientStore({currentUser: json.username , expiresAt: json.expiresAt})
       } else {
         // Handle any status other than 200 as an error
         const errorText = await response.text();
         console.error(`Error registering user: ${response.status} - ${errorText}`);
         alert(`Error: ${errorText}`);
+        updateClientStore({currentUser: '', expiresAt: undefined});
         setUsername('');
       }
     } catch (e) {
       console.log('Error registering user:', e);
       alert(`Unexpected error while registering user!`);
+      updateClientStore({currentUser: '', expiresAt: undefined});
       setUsername('');
     }
   };

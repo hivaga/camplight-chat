@@ -4,7 +4,7 @@ import {IChatMessage} from "../../../../model/mongoose/chat-message";
 
 export const dynamic = 'force-dynamic';
 const encoder = new TextEncoder();
-export const CHECK_MESSAGES_TIMEOUT_INTERVAL = 10000;
+export const CHECK_MESSAGES_TIMEOUT_INTERVAL = 500;
 
 function toDataString(data: any): string {
   return `data: ${JSON.stringify(data)}\n\n`
@@ -56,12 +56,14 @@ export async function GET(request: NextRequest) {
     writer.close(); // Close the writer when the client disconnects
   });
 
-  // Set a timeout to close the connection after 1 minute
-/*  setTimeout(() => {
+ // TODO: Find more efficient way to close the connection if the frontend is not listening anymore
+  // If the frontened page is still there it will reestablish the connection otherwise if it was closed
+  // the connection will be closed after 1 minute
+  setTimeout(() => {
     clearInterval(intervalId);
     writer.close();
     console.log('API.messages/stream:: SSE connection closed due to timeout');
-  }, 60000); // 60000 milliseconds = 1 minute*/
+  }, 60000); // 60000 milliseconds = 1 minute
 
 
   return new Response(responseStream.readable, {
