@@ -17,18 +17,27 @@
       "sender": "Ivan",
       "time": 1703948938970,
       "message": "test"
+    },
+    "659349d035c9901f00ff65dc": {
+      "sender": "Alex",
+      "time": 1704151504443,
+      "message": "Test",
+      "_id": "659349d035c9901f00ff65dc",
+      "__v": 0
+    },
+    "659349eb35c9901f00ff65de": {
+      "sender": "Alex",
+      "time": 1704151531413,
+      "message": "Good",
+      "_id": "659349eb35c9901f00ff65de",
+      "__v": 0
     }
   },
   "sessions": {
     "John": {
       "username": "John",
-      "createdAt": 1704146312459,
-      "expiresAt": 1704146372459
-    },
-    "Alex": {
-      "username": "Alex",
-      "createdAt": 1704148948386,
-      "expiresAt": 1704149008386
+      "createdAt": 1704155011898,
+      "expiresAt": 1704155071898
     },
     "Alex2": {
       "username": "Alex2",
@@ -37,8 +46,28 @@
     },
     "Ivan": {
       "username": "Ivan",
-      "createdAt": 1704148571180,
-      "expiresAt": 1704148631180
+      "createdAt": 1704154898905,
+      "expiresAt": 1704154958905
+    },
+    "Ivancho": {
+      "username": "Ivancho",
+      "createdAt": 1704153083369,
+      "expiresAt": 1704153143369
+    },
+    "Ivancho1": {
+      "username": "Ivancho1",
+      "createdAt": 1704153263148,
+      "expiresAt": 1704153323148
+    },
+    "Alex": {
+      "username": "Alex",
+      "createdAt": 1704153926510,
+      "expiresAt": 1704153986510
+    },
+    "Alexdd": {
+      "username": "Alexdd",
+      "createdAt": 1704154482518,
+      "expiresAt": 1704154542518
     }
   }
 }

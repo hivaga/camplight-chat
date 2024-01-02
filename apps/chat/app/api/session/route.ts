@@ -1,5 +1,6 @@
 import {NextRequest, NextResponse} from "next/server";
 import {addNewSesson, getSession, removeSession, SessionType} from "../../../store/server-store";
+import {revalidatePath, revalidateTag} from "next/cache";
 
 function generateSessionResponse(session: SessionType) {
   const response = NextResponse.json(session);
@@ -17,6 +18,29 @@ function generateSession(username: string, createdAt: number): SessionType {
     username,
     createdAt,
     expiresAt: (createdAt + 60 * 1000)
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const usernameCookie = request.cookies.get('username');
+    const username = usernameCookie ? usernameCookie?.value : undefined
+    console.log('API.session:: GET session:', username);
+    if (!username) {
+      return new Response('No session found!', {status: 404});
+    }
+
+    const session = await getSession(username);
+    if (!session) {
+      return new Response('No session found!', {status: 404});
+    }
+
+    return NextResponse.json(session);
+
+  } catch (e: any) {
+    console.error('API.messages:: Error while trying to get current session:', e, request);
+    const errorResponse = NextResponse.json({error: e.message ?? 'Error while trying to get messages!'}, {status: 500});
+    return errorResponse;
   }
 }
 
@@ -51,6 +75,7 @@ export async function POST(request: NextRequest) {
     console.log(`API.session:: Created new session for user: '${newUsername}'`);
     const newSession = generateSession(newUsername, currentTimestamp);
     await addNewSesson(newSession);
+    revalidateTag('session');
     const response = generateSessionResponse(newSession);
     return response
 

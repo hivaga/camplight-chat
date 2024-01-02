@@ -10,8 +10,8 @@ export interface ClientInputProps {
   formName:string
 }
 
-export function CheckInput({defaultValue, formName, placeholder}: ClientInputProps) {
-  const [currentValue, setCurrentValue] = useState(defaultValue || '');
+export function CheckInput({defaultValue = '', formName, placeholder}: ClientInputProps) {
+  const [currentValue, setCurrentValue] = useState(defaultValue);
   const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     setCurrentValue(newValue);

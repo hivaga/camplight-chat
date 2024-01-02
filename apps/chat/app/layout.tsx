@@ -1,6 +1,5 @@
 import './global.css';
 import Header from '../components/header/header';
-import resetServerStore from "../actions/reset-server-store";
 
 export const metadata = {
   title: 'Camplight Chat',

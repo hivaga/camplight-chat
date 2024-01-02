@@ -1,4 +1,5 @@
 import RegisterUser from "./register-user/register-user";
+import {getCurrentSession} from "../../lib/sessions";
 
 export interface LoginProps {
 }
@@ -22,8 +23,9 @@ let currentUser:string | undefined;
 }*/
 
 export async function User(props: LoginProps) {
+
    return (<>
-      <RegisterUser />
+      <RegisterUser/>
     </>);
 }
 
