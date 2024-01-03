@@ -95,7 +95,7 @@ export function MessagesList({initialMessages = []}: MessagesListProps) {
 
   return (
     <div className={styles.container} ref={listRef}>
-      {messages.map((message, index) => (
+      {messages.map((message) => (
         <MessageBubble sender={message.sender}
                        message={message.message}
                        key={message._id}

@@ -6,7 +6,7 @@ const error = 'Error while trying to connect to Database';
 export async function GET(request: Request) {
 
   try {
-    let responseContent = message;
+    let responseContent = '';
     const result = await checkDataBaseConnection();
 
     if (result) {

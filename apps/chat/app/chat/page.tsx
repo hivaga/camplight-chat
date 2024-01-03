@@ -2,7 +2,6 @@ import styles from './page.module.scss';
 import {IChatMessage} from "../../model/mongoose/chat-message";
 import MessagesList from "./messages-list/messages-list";
 import MessageForm from "./message-form/message-form";
-import {getCurrentSession} from "../../lib/sessions";
 
 interface ChatProps {
 }
