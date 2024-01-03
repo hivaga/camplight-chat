@@ -6,6 +6,8 @@
   "private": true,
   "dependencies": {
     "@nx/next": "17.2.1",
+    "@trpc/client": "^10.45.0",
+    "@trpc/server": "^10.45.0",
     "axios": "^1.6.2",
     "lowdb": "^7.0.1",
     "mongodb": "^5.2.0",
