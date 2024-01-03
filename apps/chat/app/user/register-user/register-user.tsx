@@ -5,7 +5,7 @@ import {FormEvent, useEffect, useState} from "react";
 import {getClientStore, updateClientStore} from "../../../store/client-store";
 import {getCurrentSession} from "../../../lib/sessions";
 
-/* eslint-disable-next-line */
+
 export interface RegisterUserProps {
 }
 
@@ -62,13 +62,12 @@ export function RegisterUser(props: RegisterUserProps) {
       });
 
       if (response.status === 200) {
-        // If the status is 200, process the response
         const json = await response.json();
         console.log('User session created:', json);
         setUsername(newUsername as string);
         updateClientStore({currentUser: json.username , expiresAt: json.expiresAt})
       } else {
-        // Handle any status other than 200 as an error
+        // Handle any status other than 200, those are the error statuses
         const errorText = await response.text();
         console.error(`Error registering user: ${response.status} - ${errorText}`);
         alert(`Error: ${errorText}`);

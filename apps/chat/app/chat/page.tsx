@@ -28,7 +28,6 @@ export async function Chat(props: ChatProps) {
 
   const messages = await initialMessagesFetch();
 
-
   return (
     <div className={styles.container}>
       <MessagesList initialMessages={messages}/>

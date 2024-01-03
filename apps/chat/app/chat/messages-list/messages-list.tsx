@@ -19,14 +19,6 @@ function getAlignment(sender: string, currentChatUser: string) {
   return 'left';
 }
 
-function scrollToBottom(div: HTMLDivElement | null, sender: string, currentUser: string) {
-  console.log('scroll', div?.scrollHeight, div?.scrollTop);
-  if (div && sender === currentUser) {
-    div.scrollTo(0, div.scrollHeight);
-  }
-}
-
-
 export function MessagesList({initialMessages = []}: MessagesListProps) {
   const [messages, setMessages] = useState(initialMessages);
   const [isAtBottom, setIsAtBottom] = useState(true); // Whether the scroll is at the bottom
@@ -37,7 +29,7 @@ export function MessagesList({initialMessages = []}: MessagesListProps) {
     const div = listRef.current;
 
     if(div) {
-      // Scroll to the bottom only if it's already at the bottom
+      // Scroll to the bottom only if the slider was at the bottom before the update
       if (isAtBottom) {
         div.scrollTo({
           top: div.scrollHeight,
@@ -64,6 +56,7 @@ export function MessagesList({initialMessages = []}: MessagesListProps) {
           console.log('New messages received:', receivedMessages);
           if(listRef && listRef.current) {
             const div = listRef.current;
+            // Logic is used to determine if the scroll slider is at the bottom before new message(s) are added
             const isAtBottom = div.scrollHeight <= div.clientHeight + div.scrollTop + 1;
             setIsAtBottom(isAtBottom);
           }
@@ -77,19 +70,19 @@ export function MessagesList({initialMessages = []}: MessagesListProps) {
     eventSource.addEventListener('error', (e: Event) => {
       console.log('SSE connection error:', e);
       eventSource.close();
-      // Reestablish the connection on error
+      // Reestablish the connection on error, this happens also when server intentionally closes the connection to check which tabs are still alive.
       setupEventSource();
     });
 
     return () => {
+      // Close connection on unmount
+      // TODO: This is not working in the route
       eventSource.close();
     };
   };
 
   useEffect(() => {
-    // Initial setup
     const cleanup = setupEventSource();
-
     return () => {
       cleanup();
     };
@@ -97,7 +90,7 @@ export function MessagesList({initialMessages = []}: MessagesListProps) {
 
   useEffect(() => {
     scrollToBottomIfAtBottom();
-  }, [messages]); // Scroll whenever messages change
+  }, [messages]);
 
 
   return (

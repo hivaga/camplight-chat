@@ -46,18 +46,19 @@ export async function GET(request: NextRequest) {
   // Write an immediate response after the subscription is created
   setTimeout(sendMessage, 0);
 
-  // Regularly check for new messages
+  // check for new messages
   const intervalId = setInterval(sendMessage, CHECK_MESSAGES_TIMEOUT_INTERVAL);
 
   // Listen for the abort event to clear the interval when the client disconnects
+  // TODO: investigate why this logic is not triggered on destroy for react components
   request.signal.addEventListener('abort', () => {
     console.log('API.messages/stream:: Connection aborted!');
     clearInterval(intervalId);
     writer.close(); // Close the writer when the client disconnects
   });
 
- // TODO: Find more efficient way to close the connection if the frontend is not listening anymore
-  // If the frontened page is still there it will reestablish the connection otherwise if it was closed
+  // TODO: Find more efficient way to close the connection if the frontend is not listening anymore. Related to the point where connection not closed on react component destruction
+  // If the frontend page is still there it will reestablish the connection otherwise if it was closed
   // the connection will be closed after 1 minute
   setTimeout(() => {
     clearInterval(intervalId);
