@@ -22,6 +22,7 @@ export function Header(props: HeaderProps) {
       <MenuItem label={'Home'} href={'/'}/>
       <MenuItem label={'User'} href={'/user'}/>
       <MenuItem label={'Chat'} href={'/chat'}/>
+      <MenuItem label={'tRPC Chat'} href={'/trpc/chat'}/>
     </div>
   );
 }

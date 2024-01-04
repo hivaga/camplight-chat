@@ -1,0 +1,11 @@
+.container{
+  height: 400px;
+  max-height: 800px;
+  overflow-y: scroll;
+  width: 100%;
+  padding: 0 20px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
