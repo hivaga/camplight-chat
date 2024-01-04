@@ -7,6 +7,7 @@
   "dependencies": {
     "@nx/next": "17.2.1",
     "@trpc/client": "^10.45.0",
+    "@trpc/next": "^10.45.0",
     "@trpc/server": "^10.45.0",
     "axios": "^1.6.2",
     "lowdb": "^7.0.1",
@@ -19,7 +20,8 @@
     "reflect-metadata": "^0.2.1",
     "socket.io-client": "^4.7.2",
     "tslib": "^2.3.0",
-    "typeorm": "^0.3.17"
+    "typeorm": "^0.3.17",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "@nx/devkit": "17.2.1",
@@ -38,6 +40,7 @@
     "@types/node": "18.16.9",
     "@types/react": "18.2.33",
     "@types/react-dom": "18.2.14",
+    "@types/ws": "^8.5.10",
     "@typescript-eslint/eslint-plugin": "^6.9.1",
     "@typescript-eslint/parser": "^6.9.1",
     "babel-jest": "^29.4.1",

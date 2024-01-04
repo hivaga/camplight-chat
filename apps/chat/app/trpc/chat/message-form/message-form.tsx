@@ -1,10 +1,11 @@
 'use client';
-import {useState, useRef, useEffect} from "react";
+import {useEffect, useRef, useState} from "react";
 import styles from './message-form.module.scss';
-import {getClientStore} from "../../../../store/client-store";
-import {getCurrentSession} from "../../../../lib/sessions";
-import sendNewChatMessage, {AddMessageResultType} from "../../../../actions/send-new-chat-message";
+import {AddMessageResultType} from "../../../../actions/send-new-chat-message";
 import CheckInput from "../../../../components/check-input/check-input";
+import {trpcClient} from "../../../../services/trpc/trpc.client";
+import {getHTTPStatusCodeFromError} from "@trpc/server/http";
+import {TRPCClientError} from "@trpc/client";
 
 
 export interface MessageFormProps {
@@ -19,29 +20,37 @@ export function MessageForm(props: MessageFormProps) {
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const session = await getCurrentSession();
-      if (session && session?.username) {
+      try {
+        const session = await trpcClient.session.query();
         setUsername(session.username);
+      } catch (e: any) {
+        if (e instanceof TRPCClientError) {
+          const statusCode = getHTTPStatusCodeFromError(e.data);
+          console.log(`TRPC error status: ${statusCode}`);
+        }else {
+          console.error('Unexpected error while fetching TRPC session', e);
+        }
+        setUsername('');
       }
+
     }
     fetchCurrentUser();
   }, []);
 
 
   const submitMessageHandler = async (formData: FormData) => {
+
     setLoading(true);
 
-    const time = new Date().getTime();
+    const now = Date.now();
     const message = formData.get('message') as string;
 
+    if (!username) {
+      return;
+    }
+
     try {
-      const submitResult: AddMessageResultType = await sendNewChatMessage(
-        {
-          sender: currentUser,
-          time,
-          message
-        }
-      );
+      const submitResult: AddMessageResultType = await trpcClient.message.query({sender: username, message, time: now});
 
       if (!submitResult.result && submitResult?.error) {
         alert(submitResult.error);
@@ -69,8 +78,7 @@ export function MessageForm(props: MessageFormProps) {
         <CheckInput placeholder={'Enter your message'} formName={'message'} key={inputKey}/>
         <button disabled={loading} type={'submit'}>Send</button>
       </div>
-    </form>
-  );
+    </form>);
 }
 
 export default MessageForm;
