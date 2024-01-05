@@ -1,10 +1,39 @@
-import { render } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import { act } from '@testing-library/react';
 
-import RegisterUser from './register-user';
+import * as clientStore from '../../../store/client-store';
+import * as sessions from '../../../lib/sessions';
+import RegisterUser from "./register-user";
+
+jest.mock('../../../store/client-store', () => ({
+  getClientStore: jest.fn(),
+  updateClientStore: jest.fn()
+}));
+
+jest.mock('../../../lib/sessions', () => ({
+  getCurrentSession: jest.fn()
+}));
 
 describe('RegisterUser', () => {
-  it('should render successfully', () => {
-    const { baseElement } = render(<RegisterUser />);
-    expect(baseElement).toBeTruthy();
+  beforeEach(() => {
+    // Mock implementations
+    clientStore.getClientStore.mockImplementation(() => ({ currentUser: '', expiresAt: null }));
+    sessions.getCurrentSession.mockResolvedValue({ username: 'testUser', expiresAt: Date.now() + 10000 });
+    global.fetch = jest.fn(() => Promise.resolve({ status: 200, json: () => Promise.resolve({ username: 'newUser', expiresAt: Date.now() + 10000 }) }));
   });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('renders the form', async () => {
+     await act(async () => {
+      render(<RegisterUser/>);
+    })
+    expect(screen.getByPlaceholderText('Input your chat name')).toBeInTheDocument();
+    expect(screen.getByRole('button')).toBeInTheDocument();
+  });
+
+
 });

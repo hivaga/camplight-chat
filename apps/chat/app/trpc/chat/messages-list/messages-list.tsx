@@ -13,7 +13,7 @@ export interface MessagesListProps {
   initialMessages: IChatMessage[];
 }
 
-function getAlignment(sender: string, currentChatUser: string) {
+export function getAlignment(sender: string, currentChatUser: string) {
   if (sender === currentChatUser) {
     return 'right';
   }

@@ -1,4 +1,8 @@
 /* eslint-disable */
+
+import { TextEncoder } from 'node:util'
+
+global.TextEncoder = TextEncoder
 export default {
   displayName: 'chat',
   preset: '../../jest.preset.js',
