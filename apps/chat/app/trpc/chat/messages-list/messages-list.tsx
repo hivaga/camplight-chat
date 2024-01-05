@@ -3,7 +3,7 @@
 import {useEffect, useRef, useState} from "react";
 
 import styles from './messages-list.module.scss';
-import MessageBubble from "../message-bubble/message-bubble";
+import MessageBubble from "../../../../components/message-bubble/message-bubble";
 import {IChatMessage} from "../../../../model/mongoose/chat-message";
 import {getClientStore} from "../../../../store/client-store";
 import {trpcClient} from "../../../../services/trpc/trpc.client";

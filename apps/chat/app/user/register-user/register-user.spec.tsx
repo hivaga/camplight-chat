@@ -20,6 +20,7 @@ describe('RegisterUser', () => {
     // Mock implementations
     (clientStore.getClientStore as jest.Mock).mockImplementation(() => ({ currentUser: '', expiresAt: null }));
     (sessions.getCurrentSession as jest.Mock).mockResolvedValue({ username: 'testUser', expiresAt: Date.now() + 10000 });
+    let global: any = window;
     global.fetch = jest.fn(() => Promise.resolve({ status: 200, json: () => Promise.resolve({ username: 'newUser', expiresAt: Date.now() + 10000 }) }));
   });
 

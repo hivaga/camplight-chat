@@ -2,9 +2,9 @@
 
 import styles from './messages-list.module.scss';
 import {IChatMessage} from "../../../model/mongoose/chat-message";
-import MessageBubble from "../message-bubble/message-bubble";
 import {getClientStore} from "../../../store/client-store";
 import {useEffect, useRef, useState} from "react";
+import MessageBubble from "../../../components/message-bubble/message-bubble";
 
 
 export interface MessagesListProps {

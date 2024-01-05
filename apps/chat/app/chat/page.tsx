@@ -23,7 +23,7 @@ async function initialMessagesFetch(): Promise<IChatMessage[]> {
 }
 
 
-export async function Chat(props: ChatProps) {
+export default async function Chat(props: ChatProps) {
 
   const messages = await initialMessagesFetch();
 
@@ -34,5 +34,3 @@ export async function Chat(props: ChatProps) {
     </div>
   );
 }
-
-export default Chat;

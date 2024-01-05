@@ -30,7 +30,7 @@ export function generateSessionResponse(session: SessionType) {
     httpOnly: true,
     path: '/',
     sameSite: 'strict',
-    maxAge: 60 // 60 seconds
+    maxAge: 60 * 5 // 5 minutes
   });
   return response;
 }

@@ -7,8 +7,7 @@
       "executor": "@nx/playwright:playwright",
       "outputs": ["{workspaceRoot}/dist/.playwright/apps/chat-e2e"],
       "options": {
-        "config": "apps/chat-e2e/playwright.config.ts",
-        "ui": true
+        "config": "apps/chat-e2e/playwright.config.ts"
       }
     },
     "lint": {

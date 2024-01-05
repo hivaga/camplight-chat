@@ -4,7 +4,6 @@ import {IChatMessage} from "../../../../model/mongoose/chat-message";
 
 export const dynamic = 'force-dynamic';
 const encoder = new TextEncoder();
-export const CHECK_MESSAGES_TIMEOUT_INTERVAL = 500;
 
 function toDataString(data: any): string {
   return `data: ${JSON.stringify(data)}\n\n`
@@ -47,7 +46,7 @@ export async function GET(request: NextRequest) {
   setTimeout(sendMessage, 0);
 
   // check for new messages
-  const intervalId = setInterval(sendMessage, CHECK_MESSAGES_TIMEOUT_INTERVAL);
+  const intervalId = setInterval(sendMessage, 500);
 
   // Listen for the abort event to clear the interval when the client disconnects
   // TODO: investigate why this logic is not triggered on destroy for react components
