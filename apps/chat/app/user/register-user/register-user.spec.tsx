@@ -18,8 +18,8 @@ jest.mock('../../../lib/sessions', () => ({
 describe('RegisterUser', () => {
   beforeEach(() => {
     // Mock implementations
-    clientStore.getClientStore.mockImplementation(() => ({ currentUser: '', expiresAt: null }));
-    sessions.getCurrentSession.mockResolvedValue({ username: 'testUser', expiresAt: Date.now() + 10000 });
+    (clientStore.getClientStore as jest.Mock).mockImplementation(() => ({ currentUser: '', expiresAt: null }));
+    (sessions.getCurrentSession as jest.Mock).mockResolvedValue({ username: 'testUser', expiresAt: Date.now() + 10000 });
     global.fetch = jest.fn(() => Promise.resolve({ status: 200, json: () => Promise.resolve({ username: 'newUser', expiresAt: Date.now() + 10000 }) }));
   });
 

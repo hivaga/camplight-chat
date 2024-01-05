@@ -24,9 +24,17 @@ test('navigate to User Page /user ', async ({ page }) => {
 
 
 test('navigate to Chat Page /chat ', async ({ page }) => {
-  const link = page.getByRole('link', { name: 'Chat' });
+  const link = page.getByRole('link', { name: 'Chat', exact: true});
   await expect(link).toBeVisible();
 
   await Promise.all([page.waitForURL('/chat'), link.click()]);
   expect(page.url()).toContain('/chat');
+});
+
+test('navigate to Chat tRPC Page /chat ', async ({ page }) => {
+  const link = page.getByRole('link', { name: 'tRPC Chat'});
+  await expect(link).toBeVisible();
+
+  await Promise.all([page.waitForURL('/trpc/chat'), link.click()]);
+  expect(page.url()).toContain('/trpc/chat');
 });
